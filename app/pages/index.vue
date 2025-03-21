@@ -48,6 +48,7 @@ import type { State } from '~/types/types'
 const toast = useToast()
 const pdfLink = ref('')
 const downloadLinkActive = ref(false)
+const apiBaseUrl = 'https://form-to-pdf-backend-production-46e9.up.railway.app'
 
 const state = ref<State>({
   name: '',
@@ -59,7 +60,7 @@ const state = ref<State>({
 
 async function onSubmit() {
   try {
-    const usersData = (await $fetch('http://localhost:1337/api/agreements', {
+    const usersData = (await $fetch(`${apiBaseUrl}/api/agreements`, {
       method: 'POST',
       body: {
         data: {
@@ -75,10 +76,10 @@ async function onSubmit() {
     const userId = usersData.data.documentId
 
     const getUserData = (await $fetch(
-      `http://localhost:1337/api/agreements/${userId}?populate=*`
+      `${apiBaseUrl}/api/agreements/${userId}?populate=*`
     )) as any
 
-    pdfLink.value = `http://localhost:1337${getUserData.data.agreement[0].url}`
+    pdfLink.value = `${apiBaseUrl}${getUserData.data.agreement[0].url}`
 
     toast.add({
       description:
